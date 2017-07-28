@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Location> mLocations = new ArrayList<>();
     LocationAdapter mLocationAdapter;
+    private static final String SELECTED_LOCATION_INDEX = "selectedLocationIndex";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mRecyclerView.setAdapter(mLocationAdapter);
+
+        if (savedInstanceState != null) {
+            int index = savedInstanceState.getInt(SELECTED_LOCATION_INDEX);
+            mLocationAdapter.setSelectedLocationIndex(index);
+            loadForecast(mLocations.get(index).getForecast());
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SELECTED_LOCATION_INDEX, mLocationAdapter.getSelectedLocationIndex());
     }
 
     private void loadData() {
