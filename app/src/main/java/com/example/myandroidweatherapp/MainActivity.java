@@ -1,10 +1,14 @@
 package com.example.myandroidweatherapp;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+
+import com.google.android.flexbox.FlexboxLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         mLocationAdapter = new LocationAdapter(this, mLocations, new LocationAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Location location) {
-                // TODO
+                loadForecast(location.getForecast());
             }
         });
         mRecyclerView.setAdapter(mLocationAdapter);
@@ -77,4 +81,38 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    private Drawable mapWeatherToDrawable(String forecast) {
+        int drawableId = 0;
+        switch (forecast) {
+            case "sun":
+                drawableId = R.drawable.ic_sun;
+                break;
+            case "rain":
+                drawableId = R.drawable.ic_rain;
+                break;
+            case "fog":
+                drawableId = R.drawable.ic_fog;
+                break;
+            case "thunder":
+                drawableId = R.drawable.ic_thunder;
+                break;
+            case "cloud":
+                drawableId = R.drawable.ic_cloud;
+                break;
+            case "snow":
+                drawableId = R.drawable.ic_snow;
+                break;
+        }
+        return getResources().getDrawable(drawableId);
+    }
+
+    private void loadForecast(List<String> forecast) {
+        FlexboxLayout flexboxLayout = (FlexboxLayout) findViewById(R.id.flexboxLayout);
+        for (int i = 0; i < flexboxLayout.getChildCount(); i++) {
+            AppCompatImageView dayView = (AppCompatImageView) flexboxLayout.getChildAt(i);
+            dayView.setImageDrawable(mapWeatherToDrawable(forecast.get(i)));
+        }
+    }
+
 }
